@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node
+{
+    int value;
+    struct node *next;
+} node_t;
+
+typedef struct queue
+{
+    node_t *front;
+    node_t *rear;
+} queue_t;
+
+node_t *push(queue_t *q, int val)
+{
+    node_t *newNode = (node_t *)malloc(sizeof(node_t));
+    newNode->value = val;
+    newNode->next = NULL;
+
+    if (q->front == NULL)
+    {
+        q->front = newNode;
+        q->rear = newNode;
+    }
+    else
+    {
+        q->rear->next = newNode;
+        q->rear = q->rear->next;
+    }
+
+    return q->rear; // Returning the new rear node
+}
+
+queue_t *pop(queue_t *q1)
+{
+    queue_t *q2 = (queue_t *)malloc(sizeof(queue_t));
+    q2->front = NULL;
+    q2->rear = NULL;
+
+    q1->rear = q1->front;
+    while (q1->rear->next != NULL)
+    {
+        push(q2, q1->rear->value);
+        q1->rear = q1->rear->next;
+    }
+
+    printf("Popped value: %d\n", q1->rear->value);
+    free(q1->rear);
+
+    return q2;
+}
+
+int main()
+{
+    queue_t q1 = {NULL, NULL};
+
+    push(&q1, 10);
+    push(&q1, 20);
+    push(&q1, 30);
+
+    queue_t *q2 = pop(&q1);
+
+    // Clean up memory
+    while (q1.front != NULL)
+    {
+        node_t *temp = q1.front;
+        q1.front = q1.front->next;
+        free(temp);
+    }
+
+    return 0;
+}

@@ -1,0 +1,26 @@
+typedef struct node
+{
+    int value;
+    struct node *next;
+    struct node *prev;
+} node_t;
+
+typedef struct queue
+{
+    node_t *front;
+    node_t *rear;
+} queue_t;
+
+int isPalindrome(queue_t *q)
+{
+    while (q->front != NULL && q->front != q->rear)
+    {
+        if (q->front->value != q->rear->value)
+        {
+            return 0;
+        }
+        q->front = q->front->next;
+        q->rear = q->rear->prev;
+    }
+    return 1;
+}
